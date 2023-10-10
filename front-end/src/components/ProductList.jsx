@@ -21,7 +21,7 @@ const deleteProduct = async (id) => {
     result=await result.json()
     if(result)
    {
-    alert("Record is deleted");
+    getProducts();
    }
 
 }
