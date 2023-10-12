@@ -80,3 +80,10 @@
 .product-list ul{
   margin: 0;
 }
+.search-box{
+    width: 400px;
+    margin: 20px; 
+    height: 15px;
+    border: 1px solid skyblue;
+    padding: 20px;
+}
