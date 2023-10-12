@@ -7,6 +7,9 @@ import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import Login from './components/Login'
 import AddProduct from './components/AddProduct';
 import ProductList from './components/ProductList';
+import Updateproduct from './components/Updateproduct';
+
+
 
 
 function App() {
@@ -20,7 +23,7 @@ function App() {
         <Route element={<PrivateComponents/>}>
         <Route path="/" element={<ProductList/>}/>
         <Route path="/add" element={<AddProduct/>}/>
-        <Route path="/update" element={<h1>Update Listing Component</h1>}/>
+        <Route path="/update/:id" element={<Updateproduct/>}/>
         <Route path="/profile" element={<h1>Profile  Component</h1>}/>
         <Route path="/logout" element={<h1>Logout Component</h1>}/>
        
