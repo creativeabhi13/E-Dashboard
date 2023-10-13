@@ -4,7 +4,7 @@ require('./db/config');
 const User = require("./db/User");
 
 const Jwt = require('jsonwebtoken');
-const Jwtkey ='e-commerce-creativeabhi13';
+const Jwtkey = 'e-commerce-creativeabhi13';
 
 const app = express();
 const Product = require("./db/Product");
@@ -16,14 +16,20 @@ app.post("/register", async (req, resp) => {
     let result = await user.save();
     result = result.toObject();
     delete result.password
-    Jwt.sign({ result }, Jwtkey ,{expiresIn:"2h"}, (err,token) =>{
-        if(err)
-        {
+    Jwt.sign({
+        result
+    }, Jwtkey, {
+        expiresIn: "2h"
+    }, (err, token) => {
+        if (err) {
             resp.send({
                 result: "Something went wrong, please try aftersometime"
             });
         }
-        resp.send({result,auth:token});
+        resp.send({
+            result,
+            auth: token
+        });
     })
 })
 
@@ -32,23 +38,28 @@ app.post("/login", async (req, resp) => {
     if (req.body.password && req.body.email) {
         let user = await User.findOne(req.body).select("-password");
         if (user) {
-            Jwt.sign({ user }, Jwtkey ,{expiresIn:"2h"}, (err,token) =>{
-                if(err)
-                {
+            Jwt.sign({
+                user
+            }, Jwtkey, {
+                expiresIn: "2h"
+            }, (err, token) => {
+                if (err) {
                     resp.send({
                         result: "Something went wrong, please try aftersometime"
                     });
                 }
-                resp.send({user,auth:token});
+                resp.send({
+                    user,
+                    auth: token
+                });
             })
-           
+
         } else {
             resp.send({
                 result: "No User Found"
             });
         }
-    }
-    else{
+    } else {
         resp.send({
             result: "No User Found"
         });
@@ -107,18 +118,42 @@ app.put("/products/:id", async (req, resp) => {
 });
 
 
-app.get("/search/:key", async (req, resp) => {
+app.get("/search/:key",verifyToken, async (req, resp) => {
     let result = await Product.find({
-        "$or": [
-            { name: {  $regex: req.params.key}},
-            { company: {  $regex: req.params.key}},
-        
-            { category: {  $regex: req.params.key}}
-        
+        "$or": [{
+                name: {
+                    $regex: req.params.key
+                }
+            },
+            {
+                company: {
+                    $regex: req.params.key
+                }
+            },
+
+            {
+                category: {
+                    $regex: req.params.key
+                }
+            }
+
         ]
     });
     resp.send(result);
 });
 
+function verifyToken(req, resp, next) {
+const token = req.headers['authorization']
+if(token)
+{
+  token = token.split(' ');
+}
+else
+{
+
+}
+console.log('middleware called',token);
+  next();
+}
 
 app.listen(5000);
